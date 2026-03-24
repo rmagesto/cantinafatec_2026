@@ -4,7 +4,7 @@
 
 class Produto:
     def __init__(self, nome, preco_compra, preco_venda, data_compra, validade, quantidade):
-        # Aqui estamos criando os atributos do produto
+        # Criando as caracteristicas do produto
         self.nome = nome
         self.preco_compra = preco_compra
         self.preco_venda = preco_venda
@@ -13,7 +13,7 @@ class Produto:
         self.quantidade = quantidade
 
     def retirar_estoque(self, qtd):
-        # Esse método diminui a quantidade no estoque
+        # Retirando do estoque
         if self.quantidade >= qtd:
             self.quantidade = self.quantidade - qtd
         else:
