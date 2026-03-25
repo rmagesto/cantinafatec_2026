@@ -1,121 +1,123 @@
-# ================================
-# CLASSE PRODUTO (ESTOQUE)
-# ================================
+# =========================
+# ARQUIVO: sistema.py (PRINCIPAL)
+# =========================
 
-class Produto:
-    def __init__(self, nome, preco_compra, preco_venda, data_compra, validade, quantidade):
-        # Aqui estamos criando os atributos do produto
-        self.nome = nome
-        self.preco_compra = preco_compra
-        self.preco_venda = preco_venda
-        self.data_compra = data_compra
-        self.validade = validade
-        self.quantidade = quantidade
+import pickle
+from datetime import datetime
+from faker import Faker
 
-    def retirar_estoque(self, qtd):
-        # Esse método diminui a quantidade no estoque
-        if self.quantidade >= qtd:
-            self.quantidade = self.quantidade - qtd
-        else:
-            print("Estoque insuficiente!")
+# Criando instâncias principais
+estoque = Estoque()
+vendas = []
+fake = Faker('pt_BR')
 
+# =========================
+# CADASTRO INICIAL DE PRODUTOS
+# =========================
 
-# ================================
-# CLASSE PAGAMENTO
-# ================================
-
-class Pagamento:
-    def __init__(self, nome, categoria, curso, valor, data_hora):
-        # Dados de quem pagou
-        self.nome = nome
-        self.categoria = categoria
-        self.curso = curso
-        self.valor = valor
-        self.data_hora = data_hora
+# Criando produtos conforme solicitado
+estoque.adicionar_produto(Produto("Água", 1.00, 3.00, "06/2031", 50))
+estoque.adicionar_produto(Produto("Água com gás", 1.50, 3.50, "06/2028", 50))
+estoque.adicionar_produto(Produto("Refrigerante", 1.20, 3.00, "06/2028", 50))
+estoque.adicionar_produto(Produto("Suco", 0.80, 3.00, "06/2027", 50))
+estoque.adicionar_produto(Produto("Torcida", 2.10, 3.00, "12/2027", 50))
+estoque.adicionar_produto(Produto("Amendoim", 1.30, 3.00, "12/2026", 50))
+estoque.adicionar_produto(Produto("Pão de Mel", 1.80, 3.00, "12/2027", 50))
+estoque.adicionar_produto(Produto("Bombom", 0.70, 1.50, "01/2029", 50))
 
 
-# ================================
-# CLASSE CANTINA (SISTEMA)
-# ================================
+# =========================
+# FUNÇÃO PARA REALIZAR VENDA
+# =========================
 
-class Cantina:
-    def __init__(self):
-        # Lista de produtos
-        self.produtos = []
+def realizar_venda(nome_produto, quantidade):
+    # Busca o produto no estoque
+    produto = estoque.buscar_produto(nome_produto)
 
-        # Lista de pagamentos
-        self.pagamentos = []
-
-    def adicionar_produto(self, produto):
-        # Adiciona um produto na lista
-        self.produtos.append(produto)
-
-    def mostrar_estoque(self):
-        # Mostra todos os produtos
-        print("\n=== ESTOQUE ===")
-        for p in self.produtos:
-            print(p.nome, "- Quantidade:", p.quantidade)
-
-    def vender_produto(self, nome_produto, quantidade, nome_cliente, categoria, curso, data_hora):
-        # Procura o produto pelo nome
-        for p in self.produtos:
-            if p.nome == nome_produto:
-
-                # Retira do estoque
-                p.retirar_estoque(quantidade)
-
-                # Calcula valor total
-                valor_total = p.preco_venda * quantidade
-
-                # Cria um pagamento
-                pagamento = Pagamento(nome_cliente, categoria, curso, valor_total, data_hora)
-
-                # Salva o pagamento
-                self.pagamentos.append(pagamento)
-
-                print("Venda realizada com sucesso!")
-                return
-
+    if produto is None:
         print("Produto não encontrado!")
+        return
 
-    def relatorio_vendas(self):
-        # Mostra todos os pagamentos
-        print("\n=== RELATÓRIO DE VENDAS ===")
-        for pag in self.pagamentos:
-            print(pag.nome, "-", pag.valor, "-", pag.data_hora)
+    # Tenta retirar do estoque
+    if not produto.retirar_estoque(quantidade):
+        print("Estoque insuficiente!")
+        return
+
+    # Gera dados fake para o cliente
+    total = 0
+
+    for v in vendas:
+        print(f"Produto: {v.produto} | Qtd: {v.quantidade} | Valor: {v.pagamento.valor}")
+        total += v.pagamento.valor
+
+    print(f"Total vendido: R$ {total}")
 
 
-# ================================
-# PROGRAMA PRINCIPAL
-# ================================
+# =========================
+# SALVAR DADOS (PICKLE)
+# =========================
 
-# Criando a cantina
-cantina = Cantina()
+def salvar_dados():
+    with open('dados.pkl', 'wb') as f:
+        pickle.dump((estoque, vendas), f)
 
-# Criando alguns produtos
-p1 = Produto("Coxinha", 2.0, 5.0, "20/03", "25/03", 10)
-p2 = Produto("Refrigerante", 3.0, 6.0, "20/03", "30/03", 5)
+    print("Dados salvos!")
 
-# Adicionando produtos na cantina
-cantina.adicionar_produto(p1)
-cantina.adicionar_produto(p2)
 
-# Mostrando estoque inicial
-cantina.mostrar_estoque()
+# =========================
+# CARREGAR DADOS (PICKLE)
+# =========================
 
-# Simulando uma venda
-cantina.vender_produto(
-    nome_produto="Coxinha",
-    quantidade=2,
-    nome_cliente="João",
-    categoria="Aluno",
-    curso="IA",
-    data_hora="24/03 10:00"
-)
+def carregar_dados():
+    global estoque, vendas
 
-# Mostrando estoque depois da venda
-cantina.mostrar_estoque()
+    try:
+        with open('dados.pkl', 'rb') as f:
+            estoque, vendas = pickle.load(f)
+        print("Dados carregados!")
+    except:
+        print("Nenhum dado encontrado.")
 
-# Mostrando relatório
-cantina.relatorio_vendas()
 
+# =========================
+# MENU PRINCIPAL
+# =========================
+
+def menu():
+    while True:
+        print("\n--- SISTEMA CANTINA ---")
+        print("1 - Listar produtos")
+        print("2 - Realizar venda")
+        print("3 - Relatório de vendas")
+        print("4 - Salvar dados")
+        print("5 - Carregar dados")
+        print("0 - Sair")
+
+        opcao = input("Escolha: ")
+
+        if opcao == '1':
+            estoque.listar_produtos()
+
+        elif opcao == '2':
+            nome = input("Nome do produto: ")
+            qtd = int(input("Quantidade: "))
+            realizar_venda(nome, qtd)
+
+        elif opcao == '3':
+            relatorio_vendas()
+
+        elif opcao == '4':
+            salvar_dados()
+
+        elif opcao == '5':
+            carregar_dados()
+
+        elif opcao == '0':
+            break
+
+        else:
+            print("Opção inválida!")
+
+
+# Inicia o sistema
+menu()
