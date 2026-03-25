@@ -1,11 +1,6 @@
-# ================================
-# CLASSE PAGAMENTO
-# ================================
-
 class Pagamento:
-    def __init__(self, nome, categoria, curso, valor, data_hora):
-        # Dados de quem pagou
-        self.nome = nome
+    def __init__(self, nome_cliente, categoria, curso, valor, data_hora):
+        self.nome_cliente = nome_cliente
         self.categoria = categoria
         self.curso = curso
         self.valor = valor
