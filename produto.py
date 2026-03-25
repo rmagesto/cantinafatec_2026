@@ -1,20 +1,28 @@
-# ================================
-# CLASSE PRODUTO (ESTOQUE)
-# ================================
-
 class Produto:
-    def __init__(self, nome, preco_compra, preco_venda, data_compra, validade, quantidade):
-        # Aqui estamos criando os atributos do produto
+    def __init__(self, nome, preco_compra, preco_venda, validade, quantidade):
+        # Nome do produto
         self.nome = nome
+        
+        # Preço que a cantina pagou
         self.preco_compra = preco_compra
+        
+        # Preço que será vendido
         self.preco_venda = preco_venda
-        self.data_compra = data_compra
+        
+        # Data de validade (string simples para facilitar)
         self.validade = validade
+        
+        # Quantidade disponível no estoque
         self.quantidade = quantidade
 
     def retirar_estoque(self, qtd):
-        # Esse método diminui a quantidade no estoque
+        # Método para retirar produtos do estoque
         if self.quantidade >= qtd:
-            self.quantidade = self.quantidade - qtd
+            self.quantidade -= qtd
+            return True
         else:
-            print("Estoque insuficiente!")
+            return False
+
+    def adicionar_estoque(self, qtd):
+        # Método para adicionar produtos ao estoque
+        self.quantidade += qtd
