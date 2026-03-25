@@ -7,7 +7,7 @@ sistema = sistema.carregar_dados()
 if len(sistema.estoque.produtos) == 0:
     sistema.carregar_produtos_iniciais()
 
-# 🔥 AQUI ACONTECE A SIMULAÇÃO AUTOMÁTICA
+# AQUI ACONTECE A SIMULAÇÃO AUTOMÁTICA
 sistema.simular_venda_automatica()
 
 while True:
