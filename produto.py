@@ -1,28 +1,41 @@
+# =============================
+# ARQUIVO 1 - produto.py
+# =============================
+
 class Produto:
-    def __init__(self, nome, preco_compra, preco_venda, validade, quantidade):
-        # Nome do produto
+    """
+    Classe que representa um produto da cantina.
+    Ela armazena todas as informações necessárias para o controle de estoque.
+    """
+
+    def __init__(self, nome, data_validade, preco_compra, preco_venda, quantidade):
+        # Nome do produto (string)
         self.nome = nome
-        
-        # Preço que a cantina pagou
+
+        # Data de validade (string - simplificado)
+        self.data_validade = data_validade
+
+        # Preço de compra (float)
         self.preco_compra = preco_compra
-        
-        # Preço que será vendido
+
+        # Preço de venda (float)
         self.preco_venda = preco_venda
-        
-        # Data de validade (string simples para facilitar)
-        self.validade = validade
-        
-        # Quantidade disponível no estoque
+
+        # Quantidade em estoque (int)
         self.quantidade = quantidade
 
-    def retirar_estoque(self, qtd):
-        # Método para retirar produtos do estoque
-        if self.quantidade >= qtd:
-            self.quantidade -= qtd
+    def reduzir_estoque(self, quantidade):
+        """
+        Reduz a quantidade do produto no estoque
+        """
+        if self.quantidade >= quantidade:
+            self.quantidade = self.quantidade - quantidade
             return True
         else:
             return False
 
-    def adicionar_estoque(self, qtd):
-        # Método para adicionar produtos ao estoque
-        self.quantidade += qtd
+    def adicionar_estoque(self, quantidade):
+        """
+        Aumenta a quantidade do produto no estoque
+        """
+        self.quantidade = self.quantidade + quantidade
