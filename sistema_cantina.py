@@ -1,49 +1,92 @@
-# ================================
-# CLASSE CANTINA (SISTEMA)
-# ================================
+# =============================
+# ARQUIVO 5 - sistema.py
+# =============================
 
-class Cantina:
+import pickle
+from estoque import Estoque
+from produto import Produto
+from pagamento import Pagamento
+from venda import Venda
+from datetime import datetime
+from faker import Faker
+
+fake = Faker()
+
+class Sistema:
+    """
+    Classe principal que controla tudo
+    """
+
     def __init__(self):
-        # Lista de produtos
-        self.produtos = []
-
-        # Lista de pagamentos
+        self.estoque = Estoque()
+        self.vendas = []
         self.pagamentos = []
 
-    def adicionar_produto(self, produto):
-        # Adiciona um produto na lista
-        self.produtos.append(produto)
+    def carregar_produtos_iniciais(self):
+        """
+        Cadastra os produtos fornecidos no enunciado
+        """
 
-    def mostrar_estoque(self):
-        # Mostra todos os produtos
-        print("\n=== ESTOQUE ===")
-        for p in self.produtos:
-            print(p.nome, "- Quantidade:", p.quantidade)
+        self.estoque.adicionar_produto(Produto("Água", "06/2031", 1.00, 3.00, 12))
+        self.estoque.adicionar_produto(Produto("Água com gás", "06/2028", 1.50, 3.50, 12))
+        self.estoque.adicionar_produto(Produto("Refrigerante", "06/2028", 1.20, 3.00, 36))
+        self.estoque.adicionar_produto(Produto("Suco", "06/2027", 0.80, 3.00, 24))
+        self.estoque.adicionar_produto(Produto("Torcida", "12/2027", 2.10, 3.00, 60))
+        self.estoque.adicionar_produto(Produto("Amendoim", "12/2026", 1.30, 3.00, 40))
+        self.estoque.adicionar_produto(Produto("Pão de Mel", "12/2027", 1.80, 3.00, 30))
+        self.estoque.adicionar_produto(Produto("Bombom", "01/2029", 0.70, 1.50, 50))
 
-    def vender_produto(self, nome_produto, quantidade, nome_cliente, categoria, curso, data_hora):
-        # Procura o produto pelo nome
-        for p in self.produtos:
-            if p.nome == nome_produto:
+    def realizar_venda(self, nome_produto, quantidade):
+        """
+        Realiza uma venda completa
+        """
 
-                # Retira do estoque
-                p.retirar_estoque(quantidade)
+        produto = self.estoque.buscar_produto(nome_produto)
 
-                # Calcula valor total
-                valor_total = p.preco_venda * quantidade
+        if produto is None:
+            print("Produto não encontrado")
+            return
 
-                # Cria um pagamento
-                pagamento = Pagamento(nome_cliente, categoria, curso, valor_total, data_hora)
+        if produto.reduzir_estoque(quantidade):
+            valor_total = produto.preco_venda * quantidade
 
-                # Salva o pagamento
-                self.pagamentos.append(pagamento)
+            pagamento = Pagamento(
+                fake.name(),
+                fake.random_element(elements=("Aluno", "Professor", "Servidor")),
+                fake.random_element(elements=("IA", "ESG")),
+                valor_total,
+                datetime.now()
+            )
 
-                print("Venda realizada com sucesso!")
-                return
+            venda = Venda(produto, quantidade, pagamento)
 
-        print("Produto não encontrado!")
+            self.vendas.append(venda)
+            self.pagamentos.append(pagamento)
+
+            print("Venda realizada com sucesso!")
+        else:
+            print("Estoque insuficiente")
+
+    def salvar_dados(self):
+        """
+        Salva os dados usando pickle
+        """
+        with open("dados.pkl", "wb") as f:
+            pickle.dump(self, f)
+
+    def carregar_dados(self):
+        """
+        Carrega os dados salvos
+        """
+        try:
+            with open("dados.pkl", "rb") as f:
+                return pickle.load(f)
+        except:
+            return self
 
     def relatorio_vendas(self):
-        # Mostra todos os pagamentos
-        print("\n=== RELATÓRIO DE VENDAS ===")
-        for pag in self.pagamentos:
-            print(pag.nome, "-", pag.valor, "-", pag.data_hora)
+        """
+        Mostra relatório de vendas
+        """
+        for v in self.vendas:
+            print(f"Produto: {v.produto.nome} | Quantidade: {v.quantidade} | Valor: {v.pagamento.valor}")
