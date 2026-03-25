@@ -1,20 +1,20 @@
-# ================================
-# CLASSE PRODUTO (ESTOQUE)
-# ================================
+class Estoque:
+    def __init__(self):
+        # Lista interna de produtos
+        self.produtos = []
 
-class Produto:
-    def __init__(self, nome, preco_compra, preco_venda, data_compra, validade, quantidade):
-        # Criando as caracteristicas do produto
-        self.nome = nome
-        self.preco_compra = preco_compra
-        self.preco_venda = preco_venda
-        self.data_compra = data_compra
-        self.validade = validade
-        self.quantidade = quantidade
+    def adicionar_produto(self, produto):
+        # Adiciona um produto ao estoque
+        self.produtos.append(produto)
 
-    def retirar_estoque(self, qtd):
-        # Retirando do estoque
-        if self.quantidade >= qtd:
-            self.quantidade = self.quantidade - qtd
-        else:
-            print("Estoque insuficiente!")
+    def buscar_produto(self, nome):
+        # Procura um produto pelo nome
+        for p in self.produtos:
+            if p.nome == nome:
+                return p
+        return None
+
+    def listar_produtos(self):
+        # Exibe todos os produtos
+        for p in self.produtos:
+            print(f"{p.nome} | Qtd: {p.quantidade} | Validade: {p.validade}")
