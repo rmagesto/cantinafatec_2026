@@ -1,25 +1,15 @@
-# =============================
-# ARQUIVO 6 - main.py (EXECUTÁVEL)
-# =============================
-
-# Importa todas as classes
-from produto import Produto
-from estoque import Estoque
-from pagamento import Pagamento
-from venda import Venda
 from sistema import Sistema
 
-# Cria o sistema
 sistema = Sistema()
 
-# Carrega dados salvos (se existir)
 sistema = sistema.carregar_dados()
 
-# Se for a primeira vez, carrega produtos
 if len(sistema.estoque.produtos) == 0:
     sistema.carregar_produtos_iniciais()
 
-# Menu simples
+# 🔥 AQUI ACONTECE A SIMULAÇÃO AUTOMÁTICA
+sistema.simular_venda_automatica()
+
 while True:
     print("\n1 - Listar produtos")
     print("2 - Realizar venda")
@@ -46,4 +36,3 @@ while True:
 
     else:
         print("Opção inválida")
-        
