@@ -1,3 +1,7 @@
+# =============================
+# ARQUIVO 5 - sistema.py
+# =============================
+
 import pickle
 from estoque import Estoque
 from produto import Produto
@@ -26,7 +30,6 @@ class Sistema:
         self.estoque.adicionar_produto(Produto("Bombom", "01/2029", 0.70, 1.50, 50))
 
     def simular_venda_automatica(self):
-
         if len(self.estoque.produtos) == 0:
             return
 
@@ -50,10 +53,7 @@ class Sistema:
             self.vendas.append(venda)
             self.pagamentos.append(pagamento)
 
-            print("\n--- VENDA AUTOMÁTICA REALIZADA ---")
-            print(f"Produto: {produto.nome}")
-            print(f"Quantidade: {quantidade}")
-            print(f"Valor total: R$ {valor_total:.2f}")
+            venda.exibir_detalhes()
 
     def realizar_venda(self, nome_produto, quantidade):
 
@@ -80,7 +80,8 @@ class Sistema:
             self.vendas.append(venda)
             self.pagamentos.append(pagamento)
 
-            print("Venda realizada com sucesso!")
+            venda.exibir_detalhes()
+
         else:
             print("Estoque insuficiente")
 
@@ -96,5 +97,14 @@ class Sistema:
             return self
 
     def relatorio_vendas(self):
+
+        print("\n===== RELATÓRIO DE VENDAS =====")
+
         for v in self.vendas:
-            print(f"Produto: {v.produto.nome} | Quantidade: {v.quantidade} | Valor: {v.pagamento.valor}")
+            print(f"\nProduto: {v.produto.nome}")
+            print(f"Quantidade: {v.quantidade}")
+            print(f"Nome: {v.pagamento.nome}")
+            print(f"Categoria: {v.pagamento.categoria}")
+            print(f"Curso: {v.pagamento.curso}")
+            print(f"Valor: R$ {v.pagamento.valor:.2f}")
+            print(f"Data/Hora: {v.pagamento.data_hora}")
