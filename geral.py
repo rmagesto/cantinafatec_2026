@@ -1,3 +1,5 @@
+DESABILITADO
+
 # =========================
 # ARQUIVO: sistema.py (PRINCIPAL)
 # =========================
