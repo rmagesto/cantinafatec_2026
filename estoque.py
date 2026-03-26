@@ -1,28 +1,24 @@
 # =============================
 # ARQUIVO 2 - estoque.py
 # =============================
-
 class Estoque:
-    """
-    Classe responsável por gerenciar todos os produtos.
-    """
 
     def __init__(self):
-        # Lista interna de produtos
         self.produtos = []
 
     def adicionar_produto(self, produto):
-        # Adiciona um produto ao estoque
         self.produtos.append(produto)
 
     def listar_produtos(self):
-        # Mostra todos os produtos
         for p in self.produtos:
-            print(f"{p.nome} - Estoque: {p.quantidade}")
+            print(f"{p.nome} | Validade: {p.data_validade} | Estoque: {p.quantidade}")
 
-    def buscar_produto(self, nome):
-        # Procura produto pelo nome
-        for p in self.produtos:
-            if p.nome == nome:
-                return p
-        return None
+    def buscar_produto_fifo(self, nome):
+        produtos_filtrados = [p for p in self.produtos if p.nome.lower() == nome.lower()]
+
+        if not produtos_filtrados:
+            return None
+
+        produtos_ordenados = sorted(produtos_filtrados, key=lambda p: p.get_data_validade_obj())
+
+        return produtos_ordenados[0]
