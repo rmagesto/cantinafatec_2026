@@ -2,40 +2,31 @@
 # ARQUIVO 1 - produto.py
 # =============================
 
+from datetime import datetime
+
 class Produto:
     """
     Classe que representa um produto da cantina.
-    Ela armazena todas as informações necessárias para o controle de estoque.
     """
 
     def __init__(self, nome, data_validade, preco_compra, preco_venda, quantidade):
-        # Nome do produto (string)
         self.nome = nome
-
-        # Data de validade (string - simplificado)
         self.data_validade = data_validade
-
-        # Preço de compra (float)
         self.preco_compra = preco_compra
-
-        # Preço de venda (float)
         self.preco_venda = preco_venda
-
-        # Quantidade em estoque (int)
         self.quantidade = quantidade
 
     def reduzir_estoque(self, quantidade):
-        """
-        Reduz a quantidade do produto no estoque
-        """
         if self.quantidade >= quantidade:
-            self.quantidade = self.quantidade - quantidade
+            self.quantidade -= quantidade
             return True
-        else:
-            return False
+        return False
 
     def adicionar_estoque(self, quantidade):
+        self.quantidade += quantidade
+
+    def get_data_validade_obj(self):
         """
-        Aumenta a quantidade do produto no estoque
+        Converte a data de validade (MM/AAAA) para objeto datetime
         """
-        self.quantidade = self.quantidade + quantidade
+        return datetime.strptime(self.data_validade, "%m/%Y")
