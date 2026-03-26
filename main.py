@@ -1,13 +1,14 @@
-from sistema import Sistema
-
+# Cria o sistema
 sistema = Sistema()
 
+# Carrega dados salvos
 sistema = sistema.carregar_dados()
 
+# Se não tiver produtos, carrega iniciais
 if len(sistema.estoque.produtos) == 0:
     sistema.carregar_produtos_iniciais()
 
-# AQUI ACONTECE A SIMULAÇÃO AUTOMÁTICA
+# Simula venda automática
 sistema.simular_venda_automatica()
 
 while True:
